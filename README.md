@@ -1,16 +1,14 @@
-# widgetbook_screenutil_error_example
+# widgetbook_screenutil_bug
 
-A new Flutter project.
 
-## Getting Started
+## Bug
+There is a bug in `widgetbook` + `screenutil` that happens when a widget rebuilds.
 
-This project is a starting point for a Flutter application.
+## Reproduction
+- Create a stateful widget
+- Add image with `.w` and `.h` sizes
+- Trigger the `setState`
 
-A few resources to get you started if this is your first Flutter project:
+Example 
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![Kapture 2023-03-20 at 09 19 24](https://user-images.githubusercontent.com/19389850/226242602-f9a77f47-3a8b-49e7-87b9-0ef5118ce418.gif)
