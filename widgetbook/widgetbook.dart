@@ -10,6 +10,56 @@ const List<Device> devices = [
   Apple.iPhone7,
 ];
 
+Widget appBuilderForScreenUtil(
+    BuildContext context,
+    Widget child,
+    ) {
+  final frameBuilder = context.frameBuilder;
+  final theme = context.theme<ThemeData>();
+
+  final builder = Builder(
+    builder: (context) {
+      return MaterialApp(
+        useInheritedMediaQuery: true,
+        theme: theme,
+        locale: context.localization?.activeLocale,
+        supportedLocales: context.localization?.locales ??
+            const <Locale>[
+              Locale('en', 'US'),
+            ],
+        localizationsDelegates: context.localization?.localizationsDelegates,
+        debugShowCheckedModeBanner: false,
+        home: ScreenUtilInit(
+          minTextAdapt: true,
+          designSize: const Size(375, 812),
+          // Enable this property so the [MediaQuery] of the [FrameAddon] is used.
+          useInheritedMediaQuery: true,
+          builder: (context, child) {
+            return Scaffold(
+              body: MediaQuery(
+                data: MediaQuery.of(context).copyWith(
+                  textScaleFactor: context.textScale,
+                ),
+                child: child!,
+              ),
+            );
+          },
+          child: child,
+        ),
+      );
+    },
+  );
+
+  // Note, that the ScreenUtilInit [Widget] only works properly iff the
+  // [FrameAddon] is active!
+  return frameBuilder == null
+      ? builder
+      : frameBuilder(
+    context,
+    builder,
+  );
+}
+
 class WidgetbookHotReload extends StatelessWidget {
   const WidgetbookHotReload({Key? key}) : super(key: key);
 
@@ -72,51 +122,7 @@ class WidgetbookHotReload extends StatelessWidget {
           ],
         ),
       ],
-      appBuilder: (context, child) {
-        final frameBuilder = context.frameBuilder;
-        final theme = context.theme<ThemeData>();
-
-        final builder = Builder(
-          builder: (context) {
-            return ScreenUtilInit(
-              minTextAdapt: true,
-              designSize: const Size(375, 812),
-              // Enable this property so the [MediaQuery] of the [FrameAddon] is used.
-              useInheritedMediaQuery: true,
-              builder: (context, child) {
-                return MaterialApp(
-                  theme: theme,
-                  locale: context.localization?.activeLocale,
-                  supportedLocales: context.localization?.locales ??
-                      const <Locale>[
-                        Locale('en', 'US'),
-                      ],
-                  localizationsDelegates: context.localization?.localizationsDelegates,
-                  debugShowCheckedModeBanner: false,
-                  home: Scaffold(
-                    body: MediaQuery(
-                      data: MediaQuery.of(context).copyWith(
-                        textScaleFactor: context.textScale,
-                      ),
-                      child: child!,
-                    ),
-                  ),
-                );
-              },
-              child: child,
-            );
-          },
-        );
-
-        // Note, that the ScreenUtilInit [Widget] only works properly iff the
-        // [FrameAddon] is active!
-        return frameBuilder == null
-            ? builder
-            : frameBuilder(
-                context,
-                builder,
-              );
-      },
+      appBuilder:appBuilderForScreenUtil,
     );
   }
 }
